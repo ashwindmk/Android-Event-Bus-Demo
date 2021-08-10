@@ -1,11 +1,8 @@
 package com.example.ashwin.eventbusdemo;
 
-/**
- * Created by ashwin on 3/10/17.
- */
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Events {
-
+public class Event {
     // Event used to send message from fragment to activity
     public static class FragmentActivityMessage {
         private String message;
@@ -36,6 +33,28 @@ public class Events {
         }
         public String getMessage() {
             return message;
+        }
+    }
+
+    // Event can be used to get the value only once by using getIfNotHandled method.
+    public static class SingleMessage<T> {
+        private final AtomicBoolean isHandled;
+        private final T value;
+
+        public SingleMessage(T value) {
+            isHandled = new AtomicBoolean(false);
+            this.value = value;
+        }
+
+        public T getIfNotHandled() {
+            if (isHandled.compareAndSet(false, true)) {
+                return value;
+            }
+            return null;
+        }
+
+        public T get() {
+            return value;
         }
     }
 }

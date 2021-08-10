@@ -28,11 +28,29 @@
         android:hint="@string/hint_message"/>
 
     <Button
-        android:id="@+id/submit"
+        android:id="@+id/submit_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/editText"
         android:layout_centerHorizontal="true"
-        android:text="@string/send_message_activity"/>
+        android:text="@string/send_message_activity" />
+
+    <Button
+        android:id="@+id/register_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/submit_button"
+        android:layout_centerHorizontal="true"
+        android:text="REGISTER"
+        android:layout_marginTop="12dp" />
+
+    <Button
+        android:id="@+id/unregister_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/register_button"
+        android:layout_centerHorizontal="true"
+        android:text="UNREGISTER"
+        android:layout_marginTop="12dp" />
 
 </RelativeLayout>

@@ -1,8 +1,7 @@
 package com.example.ashwin.eventbusdemo;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,54 +10,72 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.greenrobot.eventbus.Subscribe;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
-/**
- * Created by ashwin on 3/10/17.
- */
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 public class UserFragment extends Fragment {
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // register the event to listen
-        GlobalBus.getBus().register(this);
+//        EventBus.getDefault().register(this);
         return inflater.inflate(R.layout.fragment_user, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setClickListener(view);
-    }
 
-    public void setClickListener(final View view) {
-        Button btnSubmit = (Button) view.findViewById(R.id.submit);
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
+        Button submitButton = (Button) view.findViewById(R.id.submit_button);
+        submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 EditText etMessage = (EditText) view.findViewById(R.id.editText);
-
-                // We are broadcasting the message here to listen to the subscriber
-                Events.FragmentActivityMessage fragmentActivityMessageEvent = new Events.FragmentActivityMessage(String.valueOf(etMessage.getText()));
-                GlobalBus.getBus().post(fragmentActivityMessageEvent);
+                Event.FragmentActivityMessage fragmentActivityMessageEvent = new Event.FragmentActivityMessage(String.valueOf(etMessage.getText()));
+                EventBus.getDefault().post(fragmentActivityMessageEvent);
             }
+        });
+
+        Button registerButton = view.findViewById(R.id.register_button);
+        registerButton.setOnClickListener(v -> {
+            EventBus.getDefault().register(UserFragment.this);
+            Log.d(Constant.TAG, UserFragment.this.getClass().getSimpleName() + ": registered");
+        });
+
+        Button unregisterButton = view.findViewById(R.id.unregister_button);
+        unregisterButton.setOnClickListener(v -> {
+            EventBus.getDefault().unregister(UserFragment.this);
+            Log.d(Constant.TAG, UserFragment.this.getClass().getSimpleName() + ": unregistered");
         });
     }
 
     @Subscribe
-    public void getMessage(Events.ActivityFragmentMessage activityFragmentMessage) {
+    public void onMessageEvent(Event.ActivityFragmentMessage activityFragmentMessage) {
         TextView messageView = (TextView) getView().findViewById(R.id.message);
         messageView.setText(getString(R.string.message_received) + " " + activityFragmentMessage.getMessage());
 
         Toast.makeText(getActivity(), getString(R.string.message_fragment) + " " + activityFragmentMessage.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onCountEvent(Integer n) {
+        Log.d(Constant.TAG, this.getClass().getSimpleName() + ": count: " + n);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSingleEvent(Event.SingleMessage<Integer> message) {
+        Log.d(Constant.TAG, this.getClass().getSimpleName() + ": onSingleEvent");
+        if (message.getIfNotHandled() != null) {
+            Log.d(Constant.TAG, this.getClass().getSimpleName() + ": single message: " + message.get());
+        }
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        // Unregister the registered event
-        GlobalBus.getBus().unregister(this);
+//        EventBus.getDefault().unregister(this);
     }
-
 }

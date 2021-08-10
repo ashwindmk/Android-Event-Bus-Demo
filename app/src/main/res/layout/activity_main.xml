@@ -36,13 +36,54 @@
             android:hint="@string/hint_message"/>
 
         <Button
-            android:id="@+id/sendMessageToFragment"
+            android:id="@+id/post_message_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/activityData"
             android:layout_centerHorizontal="true"
             android:onClick="sendMessageToFragment"
             android:text="@string/send_message_fragment"/>
+
+        <View android:id="@+id/center"
+            android:layout_height="0dp"
+            android:layout_width="0dp"
+            android:layout_centerInParent="true"/>
+
+        <Button
+            android:id="@+id/post_count_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/post_message_button"
+            android:layout_toLeftOf="@id/center"
+            android:text="POST COUNT"
+            android:layout_marginTop="12dp" />
+
+        <Button
+            android:id="@+id/post_sticky_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/post_message_button"
+            android:layout_toRightOf="@id/center"
+            android:text="POST STICKY"
+            android:layout_marginTop="12dp" />
+
+        <Button
+            android:id="@+id/register_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/post_count_button"
+            android:layout_centerHorizontal="true"
+            android:text="REGISTER"
+            android:layout_marginTop="12dp"/>
+
+        <Button
+            android:id="@+id/unregister_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/register_button"
+            android:layout_centerHorizontal="true"
+            android:text="UNREGISTER"
+            android:layout_marginTop="12dp"/>
 
     </RelativeLayout>
 
